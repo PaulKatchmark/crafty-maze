@@ -18,6 +18,13 @@ window.onload = function () {
         startCell,
         click;
 
+    // turning support for on
+    Crafty.support.audio = true;
+    // path to audio file
+    Crafty.audio.add({
+      start: ["assets/retro-gaming-loop.wav"]
+    });
+
     Crafty.init(width, height);
     Crafty.background('rgb(230,230,230)');
 
@@ -64,6 +71,8 @@ window.onload = function () {
     }
 
     click = function () {
+        // on click, audio begins to play. (audio file, repeat, 90% volume)
+        Crafty.audio.play("start", -1, 0.9);
         // on click, use dfs to search our maze
         var stack = dfsSearch(startCell, this),
             neighbor;
