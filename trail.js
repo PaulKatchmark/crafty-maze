@@ -6,6 +6,9 @@
         trailColor: 'rgb(255,0,0)',
         init: function () {
             this.requires("2D, Canvas, Color");
+          //  this.bind("DFSCompleted", function() {
+            //   Crafty.audio.stop();
+            // })
         },
         // start cell and end cell represent where the algorithm currently is (start) and where it's
         // attempting to go next (end)
@@ -66,6 +69,7 @@
                 clearTimeout(t);
                 timeout = 0;
             });
+            return timeout;
         }
     });
 }(Crafty));

@@ -16,13 +16,15 @@ window.onload = function () {
         i,
         g,
         startCell,
-        click;
+        click,
+        lastTrail;
 
     // turning support for on
     Crafty.support.audio = true;
     // path to audio file
     Crafty.audio.add({
-      start: ["assets/retro-gaming-loop.wav"]
+      start: ["assets/retro-gaming-loop.wav"],
+      end: ["assets/cheers.wav"]
     });
 
     Crafty.init(width, height);
@@ -38,8 +40,10 @@ window.onload = function () {
             neighbors = [],
             stackPopped = false,
             found = false;
+
         currentCell.visited = true;
         while (!found) {
+            //  console.log("redTrail");
             neighbors = currentCell.getAttachedNeighbors();
             if (neighbors.length) {
                 // if there is a current neighbor that has not been visited, we are switching currentCell to one of them
@@ -61,30 +65,42 @@ window.onload = function () {
             }
             if (currentCell.x === endCell.x && currentCell.y === endCell.y) {
                 found = true;
+                //console.log("Found now equals: ", found);
             }
         }
         if (stack.length) {
             stack.push(endCell);
         }
         Crafty.trigger('DFSCompleted', null);
+        //console.log("DFSCompleted has just been triggered");
         return stack;
     }
 
     click = function () {
         // on click, audio begins to play. (audio file, repeat, 90% volume)
         Crafty.audio.play("start", -1, 0.9);
-        // on click, use dfs to search our maze
+          // on click, use dfs to search our maze
         var stack = dfsSearch(startCell, this),
+            timeout = 0,
             neighbor;
         if (stack.length) {
             startCell = stack.shift();
             while (stack.length) {
+            //  console.log('inside creat last trail');
                 neighbor = stack.shift();
-                Crafty.e("Trail")
+                timeout = Crafty.e("Trail")
                     .attr({slow: false, trailColor: 'rgb(0,0,255)'})
+                    .bind("MusicStop", function () {
+                      Crafty.audio.stop();
+                    })
                     .connectNodes(startCell, neighbor);
-                startCell = neighbor;
-            }
+                    startCell = neighbor;
+              }
+              //sets the music to stop once maze is complete and a little encouragment for finishing the maze
+                  Crafty.e("Delay").delay(function() {
+                    Crafty.trigger("MusicStop")
+                    Crafty.audio.play("end", 1, 0.9);
+                  }, timeout, 0);
         }
     };
     // build the grid for our DFS and rendering
