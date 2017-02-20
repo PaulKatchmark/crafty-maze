@@ -63,19 +63,17 @@ window.onload = function () {
       chosenTime--;
       timeChosen.textContent = chosenTime;
     }
+
     // will look to see if you chose a time within 10 seconds of the maze completion, if you did you get a point and "cheering" sounds
     // if you didn't get within 10 seconds you will lose a point and the crowd will "boo"
     function calcPoints() {
-      var index = 0;
-      for (index = 0; index <= 10; index++ ){
-        if (parseInt(chosenTime) == parseInt(seconds + index) || parseInt(chosenTime) == parseInt(seconds - index)){
-          console.log(parseInt(seconds + index));
-          console.log(parseInt(seconds - index));
+      var negRange = parseInt(seconds) - 10,
+          posRange = parseInt(seconds) + 10;
+        if (chosenTime <= posRange && chosenTime >= negRange){
           Crafty.audio.play("win", 1, 0.9);
           points++;
           return points;
         }
-      }
       Crafty.audio.play("lose", 1, 0.9);
       points--;
       return points
