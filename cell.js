@@ -1,6 +1,6 @@
 (function (Crafty) {
     "use strict";
-    var wallWidth = 0.5,
+    var wallWidth = 1.5,
         radius = 16;
     // our Cell component. Consists of four walls, positional information, and
     // information needed for DFS

@@ -17,14 +17,15 @@ window.onload = function () {
         g,
         startCell,
         click,
-        lastTrail;
+        lastTrail,
+        maze;
 
     // turning support for on
     Crafty.support.audio = true;
     // path to audio file
     Crafty.audio.add({
-      start: ["assets/retro-gaming-loop.wav"],
-      end: ["assets/cheers.wav"]
+      start: ["assets/sounds/retro-gaming-loop.wav"],
+      end: ["assets/sounds/cheers.wav"]
     });
 
     Crafty.init(width, height);
@@ -65,17 +66,17 @@ window.onload = function () {
             }
             if (currentCell.x === endCell.x && currentCell.y === endCell.y) {
                 found = true;
-                //console.log("Found now equals: ", found);
             }
         }
         if (stack.length) {
             stack.push(endCell);
         }
         Crafty.trigger('DFSCompleted', null);
-        //console.log("DFSCompleted has just been triggered");
         return stack;
     }
-
+    var clickMe = function() {
+      alert('Surprise!');
+    }
     click = function () {
         // on click, audio begins to play. (audio file, repeat, 90% volume)
         Crafty.audio.play("start", -1, 0.9);
