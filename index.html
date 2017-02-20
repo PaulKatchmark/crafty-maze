@@ -1,14 +1,18 @@
 <html>
-<head>
+  <head>
     <title>Crafty Maze</title>
     <script src="crafty.js"></script>
     <script src="cell.js"></script>
     <script src="trail.js"></script>
     <script src="maze.js"></script>
     <link href="style.css" rel="stylesheet" />
-</head>
-<body>
-  <h1>Hello World - Maze Game</h1>
-
-</body>
+  </head>
+  <body>
+    <h1>Hello World - Maze Game</h1>
+    <p>Choose how long it takes to complete the maze (pick within 10 seconds to win a point. Get 10 points to win!</p>
+    <h3 id="timeChosen"></h3>
+    <h4><button id="minusTime">-</button><button id="addTime">+</button></h4>
+    <h2 id="gameTimer">0</h2>
+    <p id=totalPoints></p>
+  </body>
 </html>

@@ -18,14 +18,75 @@ window.onload = function () {
         startCell,
         click,
         lastTrail,
-        maze;
+        seconds = 0,
+        chosenTime = 0,
+        t,
+        points = 5,
+        totalPoints = document.getElementById('totalPoints'),
+        gameTimer = document.getElementById('gameTimer'),
+        timeChosen = document.getElementById('timeChosen'),
+        addTime = document.getElementById('addTime'),
+        minusTime = document.getElementById('minusTime');
 
+    // displaying 0 for your chosen time the first time the page loads or on refresh
+    timeChosen.textContent = "0";
+    // when the game begins you will start with 5 points;
+    totalPoints.textContent = "You start the game with " + points + " points";
+    // timer displays at top of page and this will add seconds to it.
+    function add() {
+        seconds++;
+        gameTimer.textContent = seconds;
+        timer();
+    }
+    // function to make sure timer increase at correct interval
+    function timer() {
+        t = setTimeout(add, 1000);
+    }
+    // stops the timer and resets t, so it increases at correct speed next time add() is run
+    //also doesn't reset "seconds" so will still display correctly when maze is complete
+    function stopTimer() {
+        clearTimeout(t);
+    }
+    // will stop timer and reset and will also reset display of timer on page
+    function clearTimer() {
+      gameTimer.textContent = "0";
+      stopTimer();
+      seconds = 0;
+    }
+    // adds 1 each time you click the plus button
+    addTime.onclick = function() {
+      chosenTime++;
+      timeChosen.textContent = chosenTime;
+    }
+    // subtracts 1 each time you click the minus button
+    minusTime.onclick = function() {
+      chosenTime--;
+      timeChosen.textContent = chosenTime;
+    }
+    // will look to see if you chose a time within 10 seconds of the maze completion, if you did you get a point and "cheering" sounds
+    // if you didn't get within 10 seconds you will lose a point and the crowd will "boo"
+    function calcPoints() {
+      var index = 0;
+      for (index = 0; index <= 10; index++ ){
+        if (parseInt(chosenTime) == parseInt(seconds + index) || parseInt(chosenTime) == parseInt(seconds - index)){
+          console.log(parseInt(seconds + index));
+          console.log(parseInt(seconds - index));
+          Crafty.audio.play("win", 1, 0.9);
+          points++;
+          return points;
+        }
+      }
+      Crafty.audio.play("lose", 1, 0.9);
+      points--;
+      return points
+    }
     // turning support for on
     Crafty.support.audio = true;
     // path to audio file
     Crafty.audio.add({
       start: ["assets/sounds/retro-gaming-loop.wav"],
-      end: ["assets/sounds/cheers.wav"]
+      win: ["assets/sounds/cheers.wav"],
+      lose: ["assets/sounds/boos.wav"]
     });
 
     Crafty.init(width, height);
@@ -78,6 +139,9 @@ window.onload = function () {
       alert('Surprise!');
     }
     click = function () {
+        Crafty.trigger("MusicStop")
+        clearTimer();
+        timer();
         // on click, audio begins to play. (audio file, repeat, 90% volume)
         Crafty.audio.play("start", -1, 0.9);
           // on click, use dfs to search our maze
@@ -100,8 +164,11 @@ window.onload = function () {
               //sets the music to stop once maze is complete and a little encouragment for finishing the maze
                   Crafty.e("Delay").delay(function() {
                     Crafty.trigger("MusicStop")
-                    Crafty.audio.play("end", 1, 0.9);
+                    stopTimer();
+                    calcPoints();
+                    totalPoints.textContent = "You currently have " + points + " points";
                   }, timeout, 0);
+
         }
     };
     // build the grid for our DFS and rendering
