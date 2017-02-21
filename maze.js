@@ -87,6 +87,7 @@ window.onload = function () {
       lose: ["assets/sounds/boos.wav"]
     });
 
+
     Crafty.init(width, height);
     Crafty.background('rgb(230,230,230)');
 
@@ -132,10 +133,10 @@ window.onload = function () {
         }
         Crafty.trigger('DFSCompleted', null);
         return stack;
-    }
-    var clickMe = function() {
-      alert('Surprise!');
-    }
+    };
+
+
+
     click = function () {
         Crafty.trigger("MusicStop")
         clearTimer();
@@ -165,6 +166,11 @@ window.onload = function () {
                     stopTimer();
                     calcPoints();
                     totalPoints.textContent = "You currently have " + points + " points";
+                    if (points == 10) {
+                      Crafty.scene('Victory');
+                    } else if (points == 0) {
+                      Crafty.scene('Lose');
+                    }
                   }, timeout, 0);
 
         }
