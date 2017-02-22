@@ -70,11 +70,11 @@ window.onload = function () {
       var negRange = parseInt(seconds) - 10,
           posRange = parseInt(seconds) + 10;
         if (chosenTime <= posRange && chosenTime >= negRange){
-          Crafty.audio.play("win", 1, 0.9);
+          Crafty.audio.play("earnedPoint", 1, 0.9);
           points++;
           return points;
         }
-      Crafty.audio.play("lose", 1, 0.9);
+      Crafty.audio.play("lostPoint", 1, 0.9);
       points--;
       return points
     }
@@ -83,8 +83,10 @@ window.onload = function () {
     // path to audio file
     Crafty.audio.add({
       start: ["assets/sounds/retro-gaming-loop.wav"],
-      win: ["assets/sounds/cheers.wav"],
-      lose: ["assets/sounds/boos.wav"]
+      win: ["assets/sounds/smb_world_clear.wav"],
+      lose: ["assets/sounds/smb_gameover.wav"],
+      earnedPoint: ["assets/sounds/cheers.wav"],
+      lostPoint: ["assets/sounds/boos.wav"]
     });
 
 
@@ -150,7 +152,6 @@ window.onload = function () {
         if (stack.length) {
             startCell = stack.shift();
             while (stack.length) {
-            //  console.log('inside creat last trail');
                 neighbor = stack.shift();
                 timeout = Crafty.e("Trail")
                     .attr({slow: false, trailColor: 'rgb(0,0,255)'})
@@ -166,9 +167,13 @@ window.onload = function () {
                     stopTimer();
                     calcPoints();
                     totalPoints.textContent = "You currently have " + points + " points";
-                    if (points == 10) {
+                    if (points == 7) {
+                      Crafty.trigger("MusicStop");
+                      Crafty.audio.play("win", 1, 0.9);
                       Crafty.scene('Victory');
-                    } else if (points == 0) {
+                    } else if (points == 3) {
+                      Crafty.trigger("MusicStop");
+                      Crafty.audio.play("lose", 1, 0.9);
                       Crafty.scene('Lose');
                     }
                   }, timeout, 0);
